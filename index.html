@@ -83,25 +83,25 @@ h1 {
 
 <body>
 <div id="gameContainer">
-  <h1></h1>
-  <div id="timer">â³ Time left: 60</div>
+  <h1>Chromatic Trial</h1>
+  <div id="timer">⏳ Time left: 60</div>
   <div id="grid"></div>
 </div>
 
 <script>
-// ð§  Chromatic Trial
-// Â© 2025 GÃ«zim Hasani
+// 🧠 Chromatic Trial
+// © 2025 Gëzim Hasani
 
 const colors = [
   "#e57373", // red
   "#64b5f6", // blue
   "#81c784", // green
   "#fff176", // yellow
-  "#ba68c8"  // ð purple (goal)
+  "#ba68c8"  // 💜 purple (goal)
 ];
 
 const GOAL_COLOR = "#ba68c8";
-const TOTAL_TIME = 60; // â±ï¸ 60 Sekunden (auf 120 Ã¤ndern fÃ¼r 2 Minuten)
+const TOTAL_TIME = 60; // ⏳ 60 Sekunden (auf 120 ändern für 2 Minuten)
 
 let tiles = [];
 let timeLeft = TOTAL_TIME;
@@ -123,7 +123,7 @@ function createGrid() {
     const tile = document.createElement("div");
     tile.className = "tile";
 
-    // ð WICHTIG: gleiche Startlogik â lÃ¶sbar
+    // 🔑 WICHTIG: gleiche Startlogik → lösbar
     const startIndex = Math.floor(Math.random() * colors.length);
     tile.dataset.color = startIndex;
     tile.style.backgroundColor = colors[startIndex];
@@ -144,9 +144,10 @@ function cycleColor(tile) {
   tile.style.backgroundColor = colors[index];
 
   checkWin();
+  checkAllSame(); // NEU: prüft gleiche Farbe
 }
 
-/* ð§  WIN CHECK */
+/* 🧠 WIN CHECK */
 function checkWin() {
   if (solved) return;
 
@@ -158,12 +159,29 @@ function checkWin() {
     solved = true;
     clearInterval(timerInterval);
     setTimeout(() => {
-      alert("ð Herzlichen GlÃ¼ckwunsch!\nDu bist ein Denker ð§ ");
+      alert("🎉 Herzlichen Glückwunsch!\nDu bist ein Denker 🧠");
     }, 200);
   }
 }
 
-/* â³ TIMER */
+/* 🔍 CHECK: alle gleiche Farbe außer Goal */
+function checkAllSame() {
+  if (solved) return;
+
+  const firstColor = colors[Number(tiles[0].dataset.color)];
+  const allSame = tiles.every(
+    t => colors[Number(t.dataset.color)] === firstColor
+  );
+
+  if (allSame && firstColor !== GOAL_COLOR) {
+    setTimeout(() => {
+      alert("⚠️ Alle Felder gleich!\nStarte neu...");
+      startGame();
+    }, 150);
+  }
+}
+
+/* ⏳ TIMER */
 function startTimer() {
   clearInterval(timerInterval);
   timeLeft = TOTAL_TIME;
@@ -182,7 +200,7 @@ function startTimer() {
 
 function updateTimerUI() {
   const timerDiv = document.getElementById("timer");
-  timerDiv.textContent = `â³ Time left: ${timeLeft}`;
+  timerDiv.textContent = `⏳ Time left: ${timeLeft}`;
   timerDiv.className = "";
 
   if (timeLeft > 30) timerDiv.classList.add("timer-green");
@@ -190,9 +208,9 @@ function updateTimerUI() {
   else timerDiv.classList.add("timer-red");
 }
 
-/* ð RESET */
+/* 🔄 RESET */
 function resetGame() {
-  alert("â±ï¸ Time over!\nTry again.");
+  alert("⏱ Time over!\nTry again.");
   startGame();
 }
 
