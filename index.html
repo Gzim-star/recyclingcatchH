@@ -107,8 +107,10 @@ let tiles = [];
 let timeLeft = TOTAL_TIME;
 let timerInterval;
 let solved = false;
+let uniformTimeout = null; // Timeout für 3 Sekunden Refresh
 
 function startGame() {
+  clearTimeout(uniformTimeout); // vorherige Zeitouts löschen
   createGrid();
   startTimer();
 }
@@ -142,10 +144,8 @@ function cycleColor(tile) {
   tile.dataset.color = index;
   tile.style.backgroundColor = colors[index];
 
-  // Prüfen, ob alle Felder gleiche Farbe haben
-  checkUniformReset();
-
   checkWin();
+  checkUniformReset();
 }
 
 function checkWin() {
@@ -164,7 +164,7 @@ function checkWin() {
   }
 }
 
-// 🔹 Sofortiger Reset, sobald alle 9 Felder die gleiche Farbe sind
+// 🔹 Sofortiger Reset nach 3 Sekunden, sobald alle Felder gleiche Farbe haben
 function checkUniformReset() {
   const firstColor = colors[Number(tiles[0].dataset.color)];
   const allSame = tiles.every(
@@ -172,10 +172,12 @@ function checkUniformReset() {
   );
 
   if (allSame) {
-    // kleines Timeout, damit Klick fertig ausgeführt wird
-    setTimeout(() => {
+    clearTimeout(uniformTimeout); // vorherige Zeitouts verhindern Stapel
+    uniformTimeout = setTimeout(() => {
       startGame(); // Reset auf neue zufällige Farben
-    }, 50);
+    }, 3000); // 3 Sekunden warten
+  } else {
+    clearTimeout(uniformTimeout); // falls nicht mehr uniform
   }
 }
 
