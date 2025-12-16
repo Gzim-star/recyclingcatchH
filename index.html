@@ -107,7 +107,7 @@ let tiles = [];
 let timeLeft = TOTAL_TIME;
 let timerInterval;
 let solved = false;
-let uniformTimeout = null; // Timeout für 3 Sekunden Refresh
+let uniformTimeout = null; // Timeout für Refresh
 
 function startGame() {
   clearTimeout(uniformTimeout); // vorherige Zeitouts löschen
@@ -164,7 +164,7 @@ function checkWin() {
   }
 }
 
-// 🔹 Sofortiger Reset nach 3 Sekunden, sobald alle Felder gleiche Farbe haben
+// 🔹 Sofortiger Reset nach 2 Sekunden, sobald alle Felder gleiche Farbe haben
 function checkUniformReset() {
   const firstColor = colors[Number(tiles[0].dataset.color)];
   const allSame = tiles.every(
@@ -172,10 +172,10 @@ function checkUniformReset() {
   );
 
   if (allSame) {
-    clearTimeout(uniformTimeout); // vorherige Zeitouts verhindern Stapel
+    clearTimeout(uniformTimeout); // vorherige Timeout verhindern
     uniformTimeout = setTimeout(() => {
       startGame(); // Reset auf neue zufällige Farben
-    }, 3000); // 3 Sekunden warten
+    }, 2000); // 2 Sekunden warten
   } else {
     clearTimeout(uniformTimeout); // falls nicht mehr uniform
   }
