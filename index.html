@@ -21,7 +21,7 @@ body {
 #gameContainer {
   width: 90%;
   max-width: 700px;
-  min-height: 520px;
+  min-height: 500px;
   padding: 20px;
   background: #000;
   border-radius: 15px;
@@ -34,13 +34,13 @@ body {
 
 h1 {
   font-size: 1.6em;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: #4dd0e1;
 }
 
 #timer {
-  font-size: 1.2em;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-size: 1.1em;
   font-weight: bold;
 }
 
@@ -68,6 +68,13 @@ h1 {
   filter: brightness(1.15);
 }
 
+#message {
+  margin-top: 20px;
+  min-height: 40px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
 @media (max-width: 600px) {
   #grid {
     grid-template-columns: repeat(3, 90px);
@@ -86,57 +93,91 @@ h1 {
   <h1>Chromatic Trial</h1>
   <div id="timer">⏳ Time left: 60</div>
   <div id="grid"></div>
+  <div id="message"></div>
 </div>
 
 <script>
-// 🧠 Chromatic Trial
-// © 2025 Gëzim Hasani
+// 🔒 Chromatic Trial – BrainTrials
 
 const colors = [
   "#e57373", // red
   "#64b5f6", // blue
   "#81c784", // green
   "#fff176", // yellow
-  "#ba68c8"  // 💜 purple (goal)
+  "#ba68c8"  // PURPLE (GOAL)
 ];
 
 const GOAL_COLOR = "#ba68c8";
-const TOTAL_TIME = 60; // ⏱️ 60 Sekunden (auf 120 ändern für 2 Minuten)
 
 let tiles = [];
-let timeLeft = TOTAL_TIME;
-let timerInterval;
 let solved = false;
+let timeLeft = 60;
+let timerInterval;
 
-function startGame() {
-  createGrid();
-  startTimer();
+/* ⏳ TIMER */
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 60;
+  updateTimerUI();
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerUI();
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame("⏰ Time's up!");
+    }
+  }, 1000);
 }
 
+function updateTimerUI() {
+  const timer = document.getElementById("timer");
+  timer.textContent = `⏳ Time left: ${timeLeft}`;
+  timer.className = "";
+
+  if (timeLeft > 30) timer.classList.add("timer-green");
+  else if (timeLeft > 10) timer.classList.add("timer-yellow");
+  else timer.classList.add("timer-red");
+}
+
+/* 🎨 GRID */
 function createGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
   tiles = [];
   solved = false;
+  document.getElementById("message").textContent = "";
 
   for (let i = 0; i < 9; i++) {
-    const tile = document.createElement("div");
-    tile.className = "tile";
+    const div = document.createElement("div");
+    div.className = "tile";
 
-    // 🔑 WICHTIG: gleiche Startlogik → lösbar
-    const startIndex = Math.floor(Math.random() * colors.length);
-    tile.dataset.color = startIndex;
-    tile.style.backgroundColor = colors[startIndex];
+    const index = Math.floor(Math.random() * colors.length);
+    div.dataset.color = index;
+    div.style.backgroundColor = colors[index];
 
-    tile.onclick = () => cycleColor(tile);
+    div.onclick = () => cycleColor(div);
 
-    tiles.push(tile);
-    grid.appendChild(tile);
+    tiles.push(div);
+    grid.appendChild(div);
   }
+
+  startTimer();
 }
 
+/* 🔁 COLOR CYCLE (FIXED LOGIC) */
 function cycleColor(tile) {
   if (solved) return;
+
+  const currentColor = colors[Number(tile.dataset.color)];
+
+  // 🛑 If all tiles are same color (but NOT purple), lock the board
+  const allSame = tiles.every(
+    t => colors[Number(t.dataset.color)] === currentColor
+  );
+
+  if (allSame && currentColor !== GOAL_COLOR) return;
 
   let index = Number(tile.dataset.color);
   index = (index + 1) % colors.length;
@@ -146,10 +187,8 @@ function cycleColor(tile) {
   checkWin();
 }
 
-/* 🧠 WIN CHECK */
+/* 🏆 WIN CHECK */
 function checkWin() {
-  if (solved) return;
-
   const allPurple = tiles.every(
     t => colors[Number(t.dataset.color)] === GOAL_COLOR
   );
@@ -157,46 +196,19 @@ function checkWin() {
   if (allPurple) {
     solved = true;
     clearInterval(timerInterval);
-    setTimeout(() => {
-      alert("🎉 Herzlichen Glückwunsch!\nDu bist ein Denker 🧠");
-    }, 200);
+    document.getElementById("message").textContent =
+      "🎉 Congratulations!\nYou are a Thinker 🧠💜";
   }
 }
 
-/* ⏳ TIMER */
-function startTimer() {
-  clearInterval(timerInterval);
-  timeLeft = TOTAL_TIME;
-  updateTimerUI();
-
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateTimerUI();
-
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      resetGame();
-    }
-  }, 1000);
+/* ❌ END */
+function endGame(text) {
+  solved = true;
+  document.getElementById("message").textContent = text;
 }
 
-function updateTimerUI() {
-  const timerDiv = document.getElementById("timer");
-  timerDiv.textContent = `⏳ Time left: ${timeLeft}`;
-  timerDiv.className = "";
-
-  if (timeLeft > 30) timerDiv.classList.add("timer-green");
-  else if (timeLeft > 10) timerDiv.classList.add("timer-yellow");
-  else timerDiv.classList.add("timer-red");
-}
-
-/* 🔄 RESET */
-function resetGame() {
-  alert("⏱️ Time over!\nTry again.");
-  startGame();
-}
-
-startGame();
+/* 🚀 START */
+createGrid();
 </script>
 </body>
 </html>
