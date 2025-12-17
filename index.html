@@ -190,13 +190,25 @@ function startChromaticTrial(){
 }
 
 function createChromaticGrid(){
-  const grid=document.getElementById('grid'); grid.innerHTML=''; tilesCT=[]; solved=false;
-  for(let i=0;i<9;i++){
-    const tile=document.createElement('div'); tile.className='tile';
-    const idx=Math.floor(Math.random()*colorsCT.length);
-    tile.dataset.color=idx;
-    tile.style.backgroundColor=colorsCT[idx];
-    tile.onclick=()=>{cycleColor(tile); checkWin(); checkUniformReset
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  tilesCT = [];
+  solved = false;
+
+  for(let i=0; i<9; i++){
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+
+    const idx = Math.floor(Math.random() * colorsCT.length);
+    tile.dataset.color = idx;
+    tile.style.backgroundColor = colorsCT[idx];
+
+    tile.onclick = () => {
+      cycleColor(tile);
+      checkWin();
+      checkUniformReset();
+    };
+
     tilesCT.push(tile);
     grid.appendChild(tile);
   }
