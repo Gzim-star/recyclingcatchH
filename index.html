@@ -116,7 +116,7 @@ function startTicTacToe(){
   const container=document.getElementById('gameContainer');
   container.innerHTML=`
     <h1></h1>
-    <div id="board"></div>
+    <div id="boardWrapper"><div id="board"></div></div>
     <div id="timer">⏳ Time left: 6</div>
     <div id="message"></div>
     <div id="scoreboard">Player: 0 | AI: 0 | Draws: 0</div>
@@ -128,33 +128,8 @@ function startTicTacToe(){
         <option value="hard">Hard</option>
       </select>
     </div>
-  
-  #board {
-  display: grid;
-  grid-template-columns: repeat(3, 150px);
-  grid-template-rows: repeat(3, 150px);
-  gap: 10px;
-  margin: 0 auto;
-}
-
-.cell {
-  width: 150px;
-  height: 150px;
-  font-size: 72px;
-  border-radius: 12px;
-}
-
-@media (max-width: 600px) {
-  #board {
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-  }
-  
-  .cell {
-    width: 100px;
-    height: 100px;
-    font-size: 48px;
-    board=['','','','','','','','','']; ticScore={player:0,ai:0,draw:0}; gameOver=false; renderBoard(); startTimer();
+  `;
+  board=['','','','','','','','','']; ticScore={player:0,ai:0,draw:0}; gameOver=false; renderBoard(); startTimer();
 }
 
 function renderBoard(){const b=document.getElementById('board'); b.innerHTML=''; board.forEach((c,i)=>{const d=document.createElement('div'); d.className='cell'; d.textContent=c; if(c==='')d.style.backgroundColor=randomColor(); d.onclick=()=>playerMove(i); b.appendChild(d);});}
