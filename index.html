@@ -269,12 +269,29 @@ function startChromaticTimer(){
   },1000);
 }
 
-// Spiel neu starten (alles)
 function restartGame(){
   clearInterval(chromaticTimerInterval);
   clearInterval(mathTimerInterval);
-  location.reload();
+  clearTimeout(uniformTimeout);
+
+  const container = document.getElementById('gameContainer');
+  container.innerHTML = `
+    <h1>🧠 BrainTrials</h1>
+    <button onclick="startWordChain()">START</button>
+  `;
+
+  // Variablen zurücksetzen
+  stage = 'start';
+  wordScore = 0;
+  ticScore = {player:0, ai:0, draw:0};
+  currentWord = '';
+  usedWords = [];
+  board = [];
+  gameOver = false;
+  correctAnswer = 0;
+  correctMathCount = 0;
 }
+
 </script>
 </body>
 </html>
