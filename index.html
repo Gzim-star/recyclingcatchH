@@ -112,7 +112,10 @@ const tipModal = document.getElementById('tipModal');
 const closeBtn = document.querySelector('.close');
 
 tipButton.onclick = () => {
-  let tipText = 'hallo';
+  let tipText = '<p>🧠 BrainTrials – Are you ready?</p>
+    <p>You are entering the arena of challenges! Four tricky games await you: Word Chain, Tic-Tac-Toe, Math Challenge, and Chromatic Trial.</p>
+    <p>Each level tests your logic, speed, and observation skills. Only those who think cleverly, react quickly, and recognize patterns can reach the end.</p>
+    <p>💡 Tip: Sometimes strategy counts more than speed.</p>';
   if(stage === 'word') tipText = 'Hier ist ein Tipp für das Word Chain Spiel.';
   else if(stage === 'tic') tipText = 'Hier ist ein Tipp für Tic-Tac-Toe.';
   else if(stage === 'math') tipText = 'Hier ist ein Tipp für die Math Challenge.';
