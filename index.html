@@ -6,32 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: #000;
-  overflow: hidden;
-}
-  /* Extra Fix für alte Samsung / Android Browser */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #000;
-  z-index: -1;
-}
+html, body { height: 100%; margin: 0; }
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
+  display: grid; place-items: center;
+  background: #000; color: white;
+  font-family: Arial, sans-serif; text-align: center;
 }
 #gameContainer {
   width: 90%; max-width: 700px; min-height: 520px;
@@ -119,7 +98,7 @@ button:hover { background: #4caf50; }
   <!-- Tip Button -->
 <button id="tipButton"></button>
 
-<!-- Modal für die Tipps -->
+<!-- Modal fÃ¼r die Tipps -->
 <div id="tipModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -135,10 +114,10 @@ const closeBtn = document.querySelector('.close');
 tipButton.onclick = () => {
   let tipText = '';
   if(stage === 'start') tipText = `
-    <p> BrainTrials – Are you ready?</p>
+    <p> BrainTrials â Are you ready?</p>
     <p>You are entering the arena of challenges! Four tricky games await you: Word Chain, Tic-Tac-Toe, Math Challenge, and Chromatic Trial.</p>
     <p>Each level tests your logic, speed, and observation skills. Only those who think cleverly, react quickly, and recognize patterns can reach the end.</p>
-    <p>💡 Tip: Sometimes strategy counts more than speed.</p>
+    <p>ð¡ Tip: Sometimes strategy counts more than speed.</p>
   `;
 
   else if(stage === 'word') tipText = `
@@ -220,10 +199,10 @@ function playWord(){
   if(!word) return;
   const lastChar=currentWord.slice(-1).toLowerCase();
   const reversed=currentWord.split("").reverse().join("").toLowerCase();
-  if(word[0].toLowerCase()!==lastChar){message.textContent="❌ Wrong!";return;}
-  if(word.toLowerCase()===currentWord.toLowerCase()){message.textContent="❌ Repeat!";return;}
-  if(word.toLowerCase()===reversed){message.textContent="❌ Reversed!";return;}
-  if(usedWords.map(w=>w.toLowerCase()).includes(word.toLowerCase())){message.textContent="❌ Already used!";return;}
+  if(word[0].toLowerCase()!==lastChar){message.textContent="â Wrong!";return;}
+  if(word.toLowerCase()===currentWord.toLowerCase()){message.textContent="â Repeat!";return;}
+  if(word.toLowerCase()===reversed){message.textContent="â Reversed!";return;}
+  if(usedWords.map(w=>w.toLowerCase()).includes(word.toLowerCase())){message.textContent="â Already used!";return;}
   usedWords.push(word); currentWord=word;
   document.getElementById('wordDisplay').textContent=``;
   input.value=''; message.textContent='';
@@ -283,8 +262,8 @@ function randomColor(){const c=["#ba68c8",
 "#4dd0e1"]; return c[Math.floor(Math.random()*c.length)];}
 function startTimer(){clearInterval(timerInterval); timer=10; updateTimerUI(); timerInterval=setInterval(()=>{timer--; updateTimerUI(); if(timer===0){clearInterval(timerInterval); aiMove();}},1000);}
 function updateTimerUI(){const d=document.getElementById('timer'); let seconds = String(timer).padStart(2, '0'); d.textContent=`00:${seconds}`; d.className=''; if(timer>=8)d.classList.add('timer-green'); else if(timer>=5)d.classList.add('timer-yellow'); else d.classList.add('timer-red');}
-function playerMove(i){if(board[i]!=='') return; board[i]='X'; clearInterval(timerInterval); renderBoard(); if(checkWinner('X')){ gameOver=true; ticScore.player++; document.getElementById('message').textContent="You win! 🎉"; updateScore(); if(ticScore.player>=3){ setTimeout(startMathChallenge,800);} else { setTimeout(resetBoard,800);} return;} if(board.every(c=>c!=='')){ gameOver=true; ticScore.draw++; updateScore(); setTimeout(resetBoard,800); return;} setTimeout(aiMove,400);}
-function aiMove(){if(gameOver)return; const lvl=document.getElementById('levelSelect').value; let move;if(lvl==='easy')move=randomMove(); else if(lvl==='medium')move=mediumMove(); else move=hardMove(); board[move]='O'; renderBoard(); if(checkWinner('O')){gameOver=true; ticScore.ai++; document.getElementById('message').textContent="AI wins! 🤖"; updateScore(); if(ticScore.ai>=3){ setTimeout(startMathChallenge,800);} else { setTimeout(resetBoard,800);} return;} if(board.every(c=>c!=='')){gameOver=true; ticScore.draw++; updateScore(); setTimeout(resetBoard,800); return;} startTimer();}
+function playerMove(i){if(board[i]!=='') return; board[i]='X'; clearInterval(timerInterval); renderBoard(); if(checkWinner('X')){ gameOver=true; ticScore.player++; document.getElementById('message').textContent="You win! ð"; updateScore(); if(ticScore.player>=3){ setTimeout(startMathChallenge,800);} else { setTimeout(resetBoard,800);} return;} if(board.every(c=>c!=='')){ gameOver=true; ticScore.draw++; updateScore(); setTimeout(resetBoard,800); return;} setTimeout(aiMove,400);}
+function aiMove(){if(gameOver)return; const lvl=document.getElementById('levelSelect').value; let move;if(lvl==='easy')move=randomMove(); else if(lvl==='medium')move=mediumMove(); else move=hardMove(); board[move]='O'; renderBoard(); if(checkWinner('O')){gameOver=true; ticScore.ai++; document.getElementById('message').textContent="AI wins! ð¤"; updateScore(); if(ticScore.ai>=3){ setTimeout(startMathChallenge,800);} else { setTimeout(resetBoard,800);} return;} if(board.every(c=>c!=='')){gameOver=true; ticScore.draw++; updateScore(); setTimeout(resetBoard,800); return;} startTimer();}
 function resetBoard(){board=['','','','','','','','','']; gameOver=false; document.getElementById('message').textContent=''; renderBoard(); startTimer();}
 function randomMove(){const e=board.map((v,i)=>v===''?i:null).filter(v=>v!==null); return e[Math.floor(Math.random()*e.length)];}
 function mediumMove(){for(let i=0;i<9;i++){if(board[i]===''){board[i]='O'; if(checkWinner('O'))return i; board[i]='';}} for(let i=0;i<9;i++){if(board[i]===''){board[i]='X'; if(checkWinner('X')){board[i]=''; return i;} board[i]='';}} if(board[4]==='') return 4; const c=[0,2,6,8].filter(i=>board[i]===''); if(c.length) return c[Math.floor(Math.random()*c.length)]; return randomMove();}
@@ -311,9 +290,9 @@ function startMathChallenge(){
 }
 
 function randomInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
-function generateMathTask(){const p=randomInt(1,3); let a,b,c,text; if(p===1){a=randomInt(10,40); b=randomInt(2,12); c=randomInt(5,30); correctAnswer=a+b*c; text=`${a} + ${b} × ${c}`;} if(p===2){a=randomInt(20,80); b=randomInt(2,10); c=randomInt(5,30); correctAnswer=a-b*c; text=`${a} − ${b} × ${c}`;} if(p===3){a=randomInt(20,80); b=randomInt(2,10); c=randomInt(2,6); correctAnswer=a+b*c; text=`${a} + ${b} × ${c}`;} document.getElementById('task').textContent=`${text} = `; document.getElementById('answer').value=''; document.getElementById('message').textContent=''; document.getElementById('answer').focus();}
+function generateMathTask(){const p=randomInt(1,3); let a,b,c,text; if(p===1){a=randomInt(10,40); b=randomInt(2,12); c=randomInt(5,30); correctAnswer=a+b*c; text=`${a} + ${b} Ã ${c}`;} if(p===2){a=randomInt(20,80); b=randomInt(2,10); c=randomInt(5,30); correctAnswer=a-b*c; text=`${a} â ${b} Ã ${c}`;} if(p===3){a=randomInt(20,80); b=randomInt(2,10); c=randomInt(2,6); correctAnswer=a+b*c; text=`${a} + ${b} Ã ${c}`;} document.getElementById('task').textContent=`${text} = `; document.getElementById('answer').value=''; document.getElementById('message').textContent=''; document.getElementById('answer').focus();}
 function startMathTimer(){clearInterval(mathTimerInterval); mathTimerInterval=setInterval(()=>{mathTimer--; const d=document.getElementById('timer'); const seconds = String(mathTimer).padStart(2, '0'); d.textContent=`00:${seconds}`; d.className=''; if(mathTimer>=20)d.classList.add('timer-green'); else if(mathTimer>=10)d.classList.add('timer-yellow'); else d.classList.add('timer-red'); if(mathTimer<=0){clearInterval(mathTimerInterval); correctMathCount=0; restartGame();}},1000);}
-function checkMathAnswer(){const input=document.getElementById('answer'); if(input.value==='')return; clearInterval(mathTimerInterval); if(Number(input.value)===correctAnswer){correctMathCount++; document.getElementById('message').textContent='✅ Correct!'; if(correctMathCount>=9){ setTimeout(startChromaticTrial,700); return;} setTimeout(()=>{mathTimer=30; generateMathTask(); startMathTimer();},700);} else{document.getElementById('message').textContent='❌ Wrong!'; correctMathCount=0; setTimeout(restartGame,1000);}}
+function checkMathAnswer(){const input=document.getElementById('answer'); if(input.value==='')return; clearInterval(mathTimerInterval); if(Number(input.value)===correctAnswer){correctMathCount++; document.getElementById('message').textContent='â Correct!'; if(correctMathCount>=9){ setTimeout(startChromaticTrial,700); return;} setTimeout(()=>{mathTimer=30; generateMathTask(); startMathTimer();},700);} else{document.getElementById('message').textContent='â Wrong!'; correctMathCount=0; setTimeout(restartGame,1000);}}
 
 // ========================== CHROMATIC TRIAL ==========================
 const colorsCT=["#ba68c8",
@@ -372,25 +351,25 @@ function cycleColor(tile){
   tile.style.backgroundColor = colorsCT[idx];
 }
 
-// Prüfen, ob alle Felder die Ziel-Farbe haben
+// PrÃ¼fen, ob alle Felder die Ziel-Farbe haben
 function checkWin(){
   const allGoal = tilesCT.every(t => colorsCT[Number(t.dataset.color)] === CHROMATIC_GOAL);
   if(allGoal && !solved){
     solved = true;
     clearInterval(chromaticTimerInterval);
-    alert("🫵");
+    alert("ð«µ");
     setTimeout(restartGame, 500);
   }
 }
 
-// Prüfen, ob alle Felder die gleiche Farbe haben (nicht unbedingt Ziel-Farbe)
+// PrÃ¼fen, ob alle Felder die gleiche Farbe haben (nicht unbedingt Ziel-Farbe)
 function checkUniformReset(){
   const firstColor = colorsCT[Number(tilesCT[0].dataset.color)];
   const allSame = tilesCT.every(t => colorsCT[Number(t.dataset.color)] === firstColor);
   if(allSame && !solved){
     clearTimeout(uniformTimeout);
     uniformTimeout = setTimeout(() => {
-      startChromaticTrial(); // Reset auf neue zufällige Farben
+      startChromaticTrial(); // Reset auf neue zufÃ¤llige Farben
     }, 2000); // 2 Sekunden warten
   } else {
     clearTimeout(uniformTimeout);
@@ -437,7 +416,7 @@ function restartGame(){
     <button onclick="startWordChain()">START</button>
   `;
 
-  // Variablen zurücksetzen
+  // Variablen zurÃ¼cksetzen
   stage = 'start';
   wordScore = 0;
   ticScore = {player:0, ai:0, draw:0};
