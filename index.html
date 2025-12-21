@@ -357,38 +357,32 @@ const CHROMATIC_GOAL="#ba68c8";
 let tilesCT=[], chromaticTime=60, chromaticTimerInterval, uniformTimeout=null, solved=false;
 
 function startChromaticTrial(){
-  function showChromaticMessage(){
-  const text = document.getElementById('chromaticText');
-  if(!text) return;
-
-  text.textContent = "Hallo 👀 hast du deine Farbe gefunden?";
-  text.style.opacity = "1";
-
-  setTimeout(()=>{
-    text.style.opacity = "0";
-  }, 3000); // nach 3 Sekunden weg
-}
   stage='chromatic';
   const container=document.getElementById('gameContainer');
   container.innerHTML=`
-      <h1></h1>
-  <div id="grid"></div>
+  <h1></h1>
 
-  <div id="chromaticText" style="
-    margin-top:15px;
-    font-family:'Press Start 2P', cursive;
-    font-size:0.7em;
-    color:#4dd0e1;
-    min-height:20px;
-    opacity:0;
-    transition: opacity 0.5s;
-  "></div>
+    <div id="grid"></div>
 
-  <div id="timer">60</div>
-`;
+    <div id="chromaticText" style="
+      margin-top:15px;
+      font-family:'Press Start 2P', cursive;
+      font-size:0.7em;
+      color:#4dd0e1;
+      min-height:20px;
+      opacity:0;
+      transition: opacity 0.5s;
+    "></div>
+
+    <div id="timer">60</div>
+  `;
+
   createChromaticGrid();
   startChromaticTimer();
-}
+
+  // 👉 Text nach 10 Sekunden anzeigen
+  setTimeout(showChromaticMessage, 10000);
+}  
 
 function createChromaticGrid(){
   const grid = document.getElementById('grid');
@@ -478,14 +472,22 @@ function startChromaticTimer(){
   }, 1000);
 }
 
-function restartGame(){
+function showChromaticMessage(){
+  var text = document.getElementById('chromaticText');
+  if(!text) return;
+
+  text.textContent = "Hallo 👀 hast du deine Farbe gefunden?";
+  text.style.opacity = "1";
+
+  setTimeout(function(){
+    text.style.opacity = "0";
+  }, 3000);
+}
+    function restartGame(){
   clearInterval(chromaticTimerInterval);
   clearInterval(mathTimerInterval);
   clearTimeout(uniformTimeout);
-createChromaticGrid();
-startChromaticTimer();
-setTimeout(showChromaticMessage, 10000);
- 
+
   const container = document.getElementById('gameContainer');
   container.innerHTML = `
     <h1></h1>
